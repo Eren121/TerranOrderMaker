@@ -1,0 +1,67 @@
+<div class="row d-flex">
+  <div class="col-auto">
+    <button class="btn btn-dark" routerLink="analysis">Analysis</button>
+  </div>
+    <button class="btn btn-danger" (click)="reset()">Reset</button>
+  <div class="col-auto ml-auto">
+    <button class="btn btn-success" (click)="onSave(modalSave)">Save</button>
+  </div>
+  <div class="col-auto">
+    <button class="btn btn-success" (click)="onSave(modalLoad)">Load</button>
+  </div>
+</div>
+<div class="row mt-4">
+  <div class="col">
+    <ol class="list-group">
+      <app-new-building></app-new-building>
+      <app-building [create]="order.createMain"></app-building>
+      <div *ngFor="let create of order.getBuildings()" [@openClose]>
+        <app-building [create]="create"></app-building>
+      </div>
+    </ol>
+  </div>
+</div>
+
+<ng-template #modalSave let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Save</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="form-group">
+        <button (click)="select(saveContent)" class="btn btn-primary">Select</button>
+        <pre class="pre-scrollable"><code #saveContent>{{ save | json }}
+          </code>
+        </pre>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Close</button>
+  </div>
+</ng-template>
+
+<ng-template #modalLoad let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Load</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="form-group">
+        <div>
+          <textarea #loadContent class="form-control" rows="10" placeholder="Put code here"></textarea>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Close</button>
+    <button type="button" class="btn btn-success" (click)="modal.close('Save click'); onLoad(loadContent.value)">Load</button>
+  </div>
+</ng-template>

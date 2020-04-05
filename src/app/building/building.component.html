@@ -1,0 +1,85 @@
+<li class="list-group-item m-4 shadow" *ngIf="order.getChildren(create) as children"
+  #element>
+  <div>
+    <button type="button" class="close d-flex align-items-center justify-content-center" aria-label="Remove" *ngIf="!create.isMain" (click)="onRemove()">
+      <div aria-hidden="true" class="close-icon">&times;</div>
+    </button>
+  </div>
+  <div class="container-fluid">
+    <div class="row my-3">
+      <div class="col-auto" *ngIf="!create.isMain" >
+        <app-timepicker [(time)]="create.time" (timeChange)="onTimeChanged()"></app-timepicker>
+      </div>
+      <div class="col-auto">
+        <h4>
+          <span *ngIf="!create.isMain">{{ user.result.instants[create.time].supply.current }}</span>
+          {{ create.unit.name }}
+
+          <div *ngFor="let error of errors"
+               placement="top" [ngbTooltip]="error.label" class="opacity-50 float-right ml-4 text-info app-error-tooltip">
+            <span class="material-icons">warning</span>
+          </div>
+        </h4>
+      </div>
+      <ng-container *ngIf="possibleActions.length > 0">
+        <div class="col-auto ml-auto">
+          <app-timepicker [(time)]="nextConfig.time"></app-timepicker>
+        </div>
+        <div class="col-auto">
+          <button class="btn btn-sm btn-primary" (click)="onSearchQuickest(possibleActions[nextConfig.index])">
+            Next available time
+          </button>
+        </div>
+        <div class="col-auto">
+          <select [(ngModel)]="nextConfig.index" class="form-control">
+            <option *ngFor="let factory of possibleActions; let i = index" [value]="i">
+              {{ factory.label }}
+            </option>
+          </select>
+        </div>
+        <div class="col-auto">
+          <button class="btn btn-secondary" (click)="onAppend(nextConfig.time, possibleActions[nextConfig.index])">Ok</button>
+        </div>
+        <div class="col-auto ml-4" *ngIf="this.create.unit.isAddable">
+          <div class="form-check">
+          </div>
+        </div>
+        <div class="col-info">
+          <ngb-alert *ngIf="notAvailable"
+                     [type]="'danger'"
+                     (click)="notAvailable = false"
+          >
+            Not available
+          </ngb-alert>
+        </div>
+      </ng-container>
+    </div>
+
+    <div class="row my-3">
+      <div class="col">
+        <ol class="d-flex flex-wrap list-group list-group-horizontal">
+          <ng-container *ngFor="let action of children">
+            <ng-container *ngIf="user.analysis.filterErrors(action) as errors;">
+
+              <li class="list-group-item flex-fill m-1 shadow {{ errors.length > 0 ? 'bg-danger' : 'bg-light'}}">
+                <button type="button" class="close" aria-label="Remove" (click)="onRemoveChild(action)"><div aria-hidden="true" class="close-icon">&times;</div></button>
+
+
+                <div *ngFor="let error of errors"
+                     placement="top" [ngbTooltip]="error.label" class="opacity-50 float-left ml-4 text-info app-error-tooltip">
+                  <span class="material-icons">warning</span>
+                </div>
+
+                {{ user.result.instants[action.time].supply.current }}
+                {{ action.label }}
+                {{ action.time | seconds }}-{{ action.complete | seconds }}
+              </li>
+
+            </ng-container>
+          </ng-container>
+
+        </ol>
+      </div>
+    </div>
+  </div>
+</li>

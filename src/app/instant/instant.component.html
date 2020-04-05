@@ -1,0 +1,26 @@
+<label for="customRange1">Time</label>
+
+<div *ngIf="user.result.instants[time] as instant">
+  <div class="d-flex justify-content-center my-4">
+    <input type="range" class="custom-range w-75" id="customRange1" min="0"
+           [max]="user.result.lastTime" [(ngModel)]="time" (ngModelChange)="timeChanged.emit(time)">
+    <span class="font-weight-bold text-primary ml-2 mt-1 valueSpan">{{ time | seconds }}</span>
+  </div>
+  <div>
+    Queue: {{ instant.queue.length || "Empty" }}
+  </div>
+  <ul class="list-group">
+    <li *ngFor="let maxEntry of getMaxEntities() | keyvalue"
+        class="list-group-item list-group-item-action {{ 'list-group-item-' + getClassName(maxEntry.key) }} container">
+      <div class="row" *ngIf="getEntities() as entities">
+        <div class="col-10">
+          {{ maxEntry.key }} x{{ entities[maxEntry.key] }}
+        </div>
+        <div class="app-advancement col-2 shadow"
+             [style.background]="getBackground(entities[maxEntry.key], maxEntry.value, instant.getQueued(database.units[maxEntry.key]))">
+          <small>{{ entities[maxEntry.key] }}/{{ maxEntry.value }}</small>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>

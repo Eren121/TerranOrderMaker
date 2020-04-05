@@ -1,0 +1,80 @@
+<div class="row">
+  <div class="col">
+    <a class="btn btn-dark" routerLink="">Back</a>
+  </div>
+</div>
+<div class="row">
+  <div class="col-6">
+    <div class="container">
+      <div class="row">
+        <div class="col app-charts-container">
+          <canvas baseChart
+                  [datasets]="chartsDataResources"
+                  [labels]="chartsLabel"
+                  [options]="chartsOptions"
+                  [legend]="true"
+                  [chartType]="'line'">
+          </canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6">
+    <div class="container">
+      <div class="row">
+        <div class="col app-charts-container">
+          <canvas baseChart
+                  [datasets]="chartsDataSupply"
+                  [labels]="chartsLabel"
+                  [options]="chartsOptions"
+                  [legend]="true"
+                  [chartType]="'line'">
+          </canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row mb-4">
+  <div class="col">
+    <app-instant></app-instant>
+  </div>
+</div>
+<div class="row" *ngIf="errors.length === 0" >
+  <div class="col">
+    <ngb-alert [type]="'success'">O.K.</ngb-alert>
+  </div>
+</div>
+<div class="row" *ngIf="errors.length > 0">
+  <div class="col-auto" >
+    <strong>{{ errors.length }} error<span *ngIf="errors.length > 1">s</span></strong>
+  </div>
+  <div class="col">
+    <div class="container-fluid">
+      <div class="row" *ngFor="let error of errors">
+        <div class="col">
+          <ngb-alert [type]="'danger'">
+            <div>
+              {{ error.label }}
+            </div>
+            <div>
+              {{ error.action.time | seconds }}
+              {{ error.action.label }}
+            </div>
+          </ngb-alert>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--<div class="row">
+  <div class="col">
+    <strong>Supply: </strong>
+    <ngb-alert *ngIf="firstOverSupply === null" [type]="'success'">O.K.</ngb-alert>
+    <ngb-alert *ngIf="firstOverSupply !== null" [type]="'danger'">
+      Over supply at {{ firstOverSupply.time | seconds }}
+      ({{ firstOverSupply.supply.current }} / {{ firstOverSupply.supply.max }})
+    </ngb-alert>
+  </div>
+</div>-->
